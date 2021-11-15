@@ -7,7 +7,7 @@ import 'src/login_http.dart';
 
 void main() {runApp(const FormLoginApp());}
 
-final String splash_bg_page = 'https://app.myindiefamily.com/wp-content/uploads/2021/10/splasha-scaled.jpg'; //#change
+final String splash_bg_page = '[cover-image-url]'; //#change
 
 //# questo prepara la route "signin_http"
 //# che viene usata dopo (al click del bottone)
