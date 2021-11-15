@@ -1,8 +1,13 @@
+import 'package:baseappahome/src/screens/scheda.dart';
+import 'package:baseappahome/src/screens/homegrid.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart'; //#per memorizzare le credenziali
 import 'src/login_http.dart';
 
 void main() {runApp(const FormLoginApp());}
+
+final String splash_bg_page = 'https://app.myindiefamily.com/wp-content/uploads/2021/10/splasha-scaled.jpg'; //#change
 
 //# questo prepara la route "signin_http"
 //# che viene usata dopo (al click del bottone)
@@ -12,6 +17,16 @@ final mynavigationroutes = [
     name: 'Sign in with HTTP',
     route: '/signin_http',
     builder: (context) => LoginHttp(), //# sta dentro login_http.dart
+  ),
+  MyNavigationRoutes(
+    name: 'Home',
+    route: '/home',
+    builder: (context) => HomeRoute(), //# sta dentro login_http.dart
+  ),
+  MyNavigationRoutes(
+    name: 'Scheda',
+    route: '/scheda',
+    builder: (context) => Scheda(), //# sta dentro login_http.dart
   ),
 ];
 
@@ -68,9 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    String splash_bg_page = 'https://app.myindiefamily.com/wp-content/uploads/2021/10/splasha-scaled.jpg'; //#change
     return Scaffold(
-
       //#splash pag appbar
       /*appBar: AppBar(title: Text(widget.title),),#change */
       body: Container(
@@ -119,4 +132,20 @@ class ScreenArgumentsLoginFormParameters { //# questa serve per passare alla Log
   final String password;
 
   ScreenArgumentsLoginFormParameters(this.username, this.password);
+}
+class ScreenArgumentsHomeResponseParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
+  final Response response;
+
+  ScreenArgumentsHomeResponseParameters(this.response);
+}
+class ScreenArgumentsFutureFormDataParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
+  late Future<Homedata> futureFormData;
+
+  ScreenArgumentsFutureFormDataParameters(this.futureFormData);
+}
+class ScreenArgumentsSchedaParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
+  String authenticationToken;
+  int id;
+
+  ScreenArgumentsSchedaParameters(this.authenticationToken, this.id);
 }
