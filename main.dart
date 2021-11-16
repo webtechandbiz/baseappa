@@ -100,10 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
 
             /*const Text(
-              'You have pushed the button this many times:',
+              'Testo al centro',
             ),
             Text(
-              '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),*/
           ],
