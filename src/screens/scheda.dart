@@ -8,15 +8,11 @@ import '../../main.dart'; /*fetch data*/
 Future<Datascheda> fetchDatascheda(String authenticationToken, int IDitem) async {
   Map<String, String> headers = {"Content-type": "application/json; charset=UTF-8"};
   String json = '{"authenticationToken": "${authenticationToken}", "post_id": "${IDitem}"}';
-  final response = await post(Uri.parse(''), headers: headers, body: json);
+  final response = await post(Uri.parse('[ws-scheda-dettaglio]'), headers: headers, body: json);
 
   if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
     return Datascheda.fromJson(jsonDecode(response.body));
   } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
     throw Exception('Failed to load scheda');
   }
 }
@@ -208,26 +204,6 @@ class _SchedaState extends State<Scheda> {
             },
           )//#step2
 
-    );
-  }
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
