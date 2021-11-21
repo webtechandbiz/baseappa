@@ -1,11 +1,13 @@
+import 'package:baseappahome/src/auth/http/forgottenpassword_http.dart';
+import 'package:baseappahome/src/auth/http/subscribe_http.dart';
 import 'package:baseappahome/src/screens/scheda.dart';
 import 'package:baseappahome/src/screens/homegrid.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart'; //#per memorizzare le credenziali
-import 'src/login_http.dart';
+import 'src/auth/http/login_http.dart';
 
-void main() {runApp(const CoverPage());}
+void main() {runApp(const BaseApp());}
 
 final String splash_bg_page = '[cover-image-url]'; //#change
 
@@ -19,6 +21,16 @@ final mynavigationroutes = [
     builder: (context) => LoginHttp(), //# sta dentro login_http.dart
   ),
   MyNavigationRoutes(
+    name: 'Subscribe in with HTTP',
+    route: '/subscribe_http',
+    builder: (context) => SubscribeHttp(),
+  ),
+  MyNavigationRoutes(
+    name: 'Forgottenpassword in with HTTP',
+    route: '/forgottenpassword_http',
+    builder: (context) => ForgottenpasswordHttp(),
+  ),
+  MyNavigationRoutes(
     name: 'Home',
     route: '/home',
     builder: (context) => HomeRoute(), //# sta dentro login_http.dart
@@ -30,30 +42,28 @@ final mynavigationroutes = [
   ),
 ];
 
-class CoverPage extends StatelessWidget { //# viene chiamata dal main()
-  const CoverPage({Key? key}) : super(key: key);
+class BaseApp extends StatelessWidget { //# viene chiamata dal main()
+  const BaseApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '',
-      theme: ThemeData(primarySwatch: Colors.teal),
       routes: Map.fromEntries(mynavigationroutes.map((d) => MapEntry(d.route, d.builder))),
-      home: MyHomePage(title: ''), //#change
+      home: CoverPage(title: ''), //#change
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class CoverPage extends StatefulWidget {
+  const CoverPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _CoverPageState createState() => _CoverPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _CoverPageState extends State<CoverPage> {
   void _navigateToLogin() async {
     //#PREPARA i dati per la login
     final prefs = await SharedPreferences.getInstance();
@@ -62,8 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
       //prefs.remove('_username');
       //prefs.remove('_password');
       //#--
-      String _username_saved =  prefs.getString('_username') ?? '';
-      String _password_saved =  prefs.getString('_password') ?? '';
+      //#changeif-3412 String _username_saved =  prefs.getString('_username') ?? '';
+      //#changeif-3412 String _password_saved =  prefs.getString('_password') ?? ''; //#changeif-3412
+      String _authtokenlogin_saved = prefs.getString('authenticationtoken') ?? '';
 
       //#NAVIGA VERO LA LOGIN
       //#quando il bottone viene cliccato,
@@ -74,8 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           '/signin_http',
           arguments: ScreenArgumentsLoginFormParameters(
-            _username_saved,
-            _password_saved,
+            //#changeif-3412 _username_saved,
+            //#changeif-3412 _password_saved,
+              _authtokenlogin_saved
           )
       );
     });
@@ -98,12 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             /*const Text(
               'Testo al centro',
-            ),
-            Text(
-              style: Theme.of(context).textTheme.headline4,
             ),*/
           ],
         ),*/
@@ -126,22 +134,36 @@ class MyNavigationRoutes { //# questo è l'oggetto generico per i nomi e gli ind
 
   const MyNavigationRoutes({required this.name, required this.route, required this.builder});
 }
+//# -- ScreenArgumentsFormParameters
 class ScreenArgumentsLoginFormParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
-  final String username;
-  final String password;
+  //#changeif-3412 final String username;
+  //#changeif-3412 final String password;
+  final String authtokenlogin;
 
-  ScreenArgumentsLoginFormParameters(this.username, this.password);
+  //#changeif-3412 ScreenArgumentsLoginFormParameters(this.username, this.password);
+  ScreenArgumentsLoginFormParameters(this.authtokenlogin);
 }
+class ScreenArgumentsSubscribeFormParameters { //# questa serve per navigare verso la pagina di Registrazione
+  //# in questo caso, non viene passato alcun parametro
+  ScreenArgumentsSubscribeFormParameters();
+}
+class ScreenArgumentsForgottenpasswordFormParameters { //# questa serve per passare alla [classe] i dati memorizzati
+
+  ScreenArgumentsForgottenpasswordFormParameters();
+}
+
+//# -- ScreenArguments Response Future
 class ScreenArgumentsHomeResponseParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
   final Response response;
 
   ScreenArgumentsHomeResponseParameters(this.response);
 }
-class ScreenArgumentsFutureFormDataParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
-  late Future<Homedata> futureFormData;
+class ScreenArgumentsFutureLoginFormDataParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
+  late Future<Homedata> futureLoginFormData;
 
-  ScreenArgumentsFutureFormDataParameters(this.futureFormData);
+  ScreenArgumentsFutureLoginFormDataParameters(this.futureLoginFormData);
 }
+
 class ScreenArgumentsSchedaParameters { //# questa serve per passare alla LoginHttp() i dati memorizzati
   String authenticationToken;
   int id;
