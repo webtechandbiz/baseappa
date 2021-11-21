@@ -2,21 +2,25 @@ import 'dart:convert';
 
 import 'package:baseappahome/main.dart';
 import 'package:flutter/material.dart';
-import 'package:baseappahome/src/login_http.dart';
+import 'package:baseappahome/src/auth/http/login_http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //#https://flutter.dev/docs/cookbook/navigation/navigation-basics
 class HomeRoute extends StatelessWidget {
   const HomeRoute({Key? key}) : super(key: key);
 
+  Future<void> setAuthenticationToken(String authenticationtoken) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("authenticationtoken", authenticationtoken);
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Category> _categoryList = [];
     String imgsrc = '';
-    final homeArgs = ModalRoute.of(context)!.settings.arguments as ScreenArgumentsFutureFormDataParameters;
+    final homeArgs = ModalRoute.of(context)!.settings.arguments as ScreenArgumentsFutureLoginFormDataParameters;
 
-    print('home-args');
-    print(homeArgs.futureFormData);
-    late Future<Homedata> futureHomedata = homeArgs.futureFormData;
+    late Future<Homedata> futureHomedata = homeArgs.futureLoginFormData;
 
     return Scaffold(
         appBar: AppBar(
@@ -29,6 +33,7 @@ class HomeRoute extends StatelessWidget {
 
             if (snapshot.hasData) {
               String authenticationtoken = snapshot.data!.authenticationToken;
+              setAuthenticationToken(authenticationtoken);
 
               for (var item in snapshot.data!.spuntieducativi!){
                 if(item['imgurl'] != false && item['imgurl'] != ''){
@@ -43,8 +48,7 @@ class HomeRoute extends StatelessWidget {
                       IDitem: item['_ID'],
                       item: item,
                       imagePath: imgsrc,
-                      title: item['titlelenght'],
-                      activities: [],
+                      title: item['titlelenght']
                     )
 
                 );
@@ -135,7 +139,6 @@ class Category {
     required this.authenticationToken,
     required this.IDitem,
     required this.item,
-    required this.activities,
     this.title = '',
     this.imagePath = ''
   });
@@ -144,14 +147,5 @@ class Category {
   Object item;
   String title;
   String imagePath;
-  List activities;
   String authenticationToken;
-
-  static List<Category> categoryList = <Category>[
-
-  ];
-
-  static List<Category> popularCourseList = <Category>[
-
-  ];
 }
