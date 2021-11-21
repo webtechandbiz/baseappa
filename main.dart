@@ -5,7 +5,7 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart'; //#per memorizzare le credenziali
 import 'src/login_http.dart';
 
-void main() {runApp(const FormLoginApp());}
+void main() {runApp(const CoverPage());}
 
 final String splash_bg_page = '[cover-image-url]'; //#change
 
@@ -30,8 +30,8 @@ final mynavigationroutes = [
   ),
 ];
 
-class FormLoginApp extends StatelessWidget { //# viene chiamata dal main()
-  const FormLoginApp({Key? key}) : super(key: key);
+class CoverPage extends StatelessWidget { //# viene chiamata dal main()
+  const CoverPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
