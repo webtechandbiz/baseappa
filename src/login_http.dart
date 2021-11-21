@@ -165,6 +165,65 @@ class _LoginHttpState extends State<LoginHttp> {
                       }
                     },
                   ),
+                  Divider(
+                      color: Colors.black
+                  ),
+                  Container(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: TextButton(
+                                  child: const Text(
+                                    'Password dimenticata',
+                                    style: TextStyle(
+                                        color: Colors.black
+                                    ),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      minimumSize: Size(MediaQuery.of(context).size.width/2-20,40)
+                                  ),
+                                  onPressed: () async {
+
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Container(
+                                child: TextButton(
+                                  child: const Text(
+                                    'Registrati',
+                                    style: TextStyle(
+                                        color: Colors.black
+                                    ),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    minimumSize: Size(MediaQuery.of(context).size.width/2-20,40)
+                                  ),
+                                  onPressed: () async {
+
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /*3*/
+
+                      ],
+                    ),
+                  ),
                 ].expand(
                       (widget) =>
                   [
