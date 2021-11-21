@@ -65,13 +65,14 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
         fit: BoxFit.cover,
       );
 
+    //# https://docs.flutter.dev/cookbook/forms/text-field-changes
     TextEditingController _personnameController = TextEditingController(text: '');
     TextEditingController _personsurnameController = TextEditingController(text: '');
     TextEditingController _usernameController = TextEditingController(text: _username_saved.toString());
 
     TextFormField _personnameTFF = TextFormField(
       controller: _personnameController,
-      autofocus: true,
+      //autofocus: true,
       textInputAction: TextInputAction.next,
       decoration: const InputDecoration(
         labelText: 'Nome', //#change
@@ -92,7 +93,7 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
 
     TextFormField _personsurnameTFF = TextFormField(
       controller: _personnameController,
-      autofocus: true,
+      //autofocus: true,
       textInputAction: TextInputAction.next,
       decoration: const InputDecoration(
         labelText: 'Cognome', //#change
@@ -113,7 +114,7 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
 
     TextFormField _usernameTFF = TextFormField(
       controller: _usernameController,
-      autofocus: true,
+      //autofocus: true,
       textInputAction: TextInputAction.next,
       decoration: const InputDecoration(
         labelText: 'Email', //#change
@@ -170,9 +171,13 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
                       'Registrati',
                       style: TextStyle(
                         //#change fontWeight: FontWeight.bold,
-                        color: Colors.black, //#change colore (del bottone per accedere)
+                        color: Colors.white, //#change colore del bottone
                       ),
-                    ), //#change bottone per accedere
+                    ), //#change bottone per registrarsi
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        minimumSize: Size(MediaQuery.of(context).size.width/2-20,40)
+                    ),
                     onPressed: () async {
                       Map<String, String> headers = {
                         "Content-type": "application/json; charset=UTF-8"
