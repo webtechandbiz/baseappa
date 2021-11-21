@@ -51,7 +51,7 @@ class _ForgottenpasswordHttpState extends State<ForgottenpasswordHttp> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArgumentsForgottenpasswordFormParameters;
-    final Uri WS_url_forgottenpassword = Uri.parse('[ws-forgottenpassword-login-url]'); //#change
+    final Uri WS_url_forgottenpassword = Uri.parse(''); //#change
 
     Image _header_image =
     new Image.asset(
@@ -62,7 +62,7 @@ class _ForgottenpasswordHttpState extends State<ForgottenpasswordHttp> {
     TextEditingController _usernameController = TextEditingController(text: _username_saved.toString());
     TextFormField _usernameTFF = TextFormField(
       controller: _usernameController,
-      autofocus: true,
+      //autofocus: true,
       textInputAction: TextInputAction.next,
       decoration: const InputDecoration(
         labelText: 'Email', //#change
@@ -103,9 +103,9 @@ class _ForgottenpasswordHttpState extends State<ForgottenpasswordHttp> {
                       'Recupera password',
                       style: TextStyle(
                         //#change fontWeight: FontWeight.bold,
-                        color: Colors.white, //#change colore (del bottone per accedere)
+                        color: Colors.white, //#change colore del bottone
                       ),
-                    ), //#change bottone per accedere
+                    ), //#change bottone
                     style: TextButton.styleFrom(
                         backgroundColor: Colors.blue,
                         minimumSize: Size(MediaQuery.of(context).size.width/2-20,40)
