@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../main.dart';
 
@@ -15,7 +14,6 @@ class SubscribeFormData {
   String? passwordwrochophag;
   String? authenticationToken;
   bool? success;
-  List<dynamic>? spuntieducativi;
 
   SubscribeFormData({
     this.personnamedolifrives,
@@ -23,8 +21,7 @@ class SubscribeFormData {
     this.usernamedolifrives,
     this.passwordwrochophag,
     this.authenticationToken,
-    this.success,
-    this.spuntieducativi
+    this.success
   });
 
   factory SubscribeFormData.fromJson(Map<String, dynamic> json) =>
@@ -49,10 +46,11 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
   SubscribeFormData firstsubscribeFormData = SubscribeFormData();
   SubscribeFormData subscribeFormData = SubscribeFormData();
 
-  String _personname_saved = '';
-  String _personsurname_saved = '';
-  String _username_saved = '';
-  String _password_saved = '';
+  //# https://docs.flutter.dev/cookbook/forms/text-field-changes
+  TextEditingController _personnameController = TextEditingController();
+  TextEditingController _personsurnameController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +62,6 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
         'assets/images/_auth/hd-subscribe.jpg',
         fit: BoxFit.cover,
       );
-
-    //# https://docs.flutter.dev/cookbook/forms/text-field-changes
-    TextEditingController _personnameController = TextEditingController(text: '');
-    TextEditingController _personsurnameController = TextEditingController(text: '');
-    TextEditingController _usernameController = TextEditingController(text: _username_saved.toString());
 
     TextFormField _personnameTFF = TextFormField(
       controller: _personnameController,
@@ -90,9 +83,8 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
         subscribeFormData.personnamedolifrives = value;
       },
     );
-
     TextFormField _personsurnameTFF = TextFormField(
-      controller: _personnameController,
+      controller: _personsurnameController,
       //autofocus: true,
       textInputAction: TextInputAction.next,
       decoration: const InputDecoration(
@@ -111,7 +103,6 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
         subscribeFormData.personsurnamedolifrives = value;
       },
     );
-
     TextFormField _usernameTFF = TextFormField(
       controller: _usernameController,
       //autofocus: true,
@@ -132,8 +123,6 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
         subscribeFormData.usernamedolifrives = value;
       },
     );
-
-    TextEditingController _passwordController = TextEditingController(text: _password_saved.toString());
     TextFormField _passwordTFF = TextFormField(
       controller: _passwordController,
       decoration: const InputDecoration(
@@ -183,31 +172,22 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
                         "Content-type": "application/json; charset=UTF-8"
                       };
 
-                      if (_username_saved.toString() != '') {
-                        subscribeFormData.usernamedolifrives = _username_saved.toString();
-                      }
-                      if (_password_saved.toString() != '') {
-                        subscribeFormData.passwordwrochophag = _password_saved.toString();
-                      }
-
                       //# Subscribe via WS
-                      String json = '{"usernamedolifrives": "${_usernameController.text}", "passwordwrochophag": "${subscribeFormData.passwordwrochophag}"}';
+                      String json = '{"usernamedolifrives": "${_usernameController.text}", "passwordwrochophag": "${subscribeFormData.passwordwrochophag}"'
+                          ', "personnamedolifrives": "${subscribeFormData.personnamedolifrives}"'
+                          ', "personsurnamedolifrives": "${subscribeFormData.personsurnamedolifrives}"}';
                       Response response = await post(WS_url_Subscribe, headers: headers, body: json);
                       int statusCode = response.statusCode;
                       String body = response.body;
-
+print('fp');
+print(body);
                       if (response.statusCode == 200) {
-                        final prefs = await SharedPreferences.getInstance();
-                        prefs.setString('_username',subscribeFormData.usernamedolifrives?.toString() ?? '');
-                        prefs.setString('_password',subscribeFormData.passwordwrochophag?.toString() ?? '');
-/*
-                        late Future<Homedata> futureHomedata;
-                        futureHomedata = fetchHomedata(response);
-                        */
-
+                        _showDialog('Registrazione avvenuta con successo, prova ad accedere.');
+                        Navigator.of(context).pop();
                       } else {
                         print('subscribefailed');
                         _showDialog('Subscribe errato, riprova.');
+                        Navigator.of(context).pop();
                         //#change throw Exception('Subscribe failed.');
                       }
                     },
@@ -251,15 +231,18 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
 
 SubscribeFormData _$subscribeFormDataFromJson(Map<String, dynamic> json) {
   return SubscribeFormData(
+      personnamedolifrives: json['personnamedolifrives'] as String?,
+      personsurnamedolifrives: json['personsurnamedolifrives'] as String?,
       usernamedolifrives: json['usernamedolifrives'] as String?,
       passwordwrochophag: json['passwordwrochophag'] as String?,
       authenticationToken: json['authenticationToken'] as String?,
-      success: json['success'] as bool?,
-      spuntieducativi: json['spuntieducativi'] as List<dynamic>?
+      success: json['success'] as bool?
   );
 }
 
 Map<String, dynamic> _$subscribeFormDataToJson(SubscribeFormData instance) => <String, dynamic>{
+  'personnamedolifrives': instance.personnamedolifrives,
+  'personsurnamedolifrives': instance.personsurnamedolifrives,
   'usernamedolifrives': instance.usernamedolifrives,
-  'passwordwrochophag': instance.passwordwrochophag,
+  'passwordwrochophag': instance.passwordwrochophag
 };
