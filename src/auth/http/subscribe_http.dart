@@ -173,7 +173,8 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
                       };
 
                       //# Subscribe via WS
-                      String json = '{"usernamedolifrives": "${_usernameController.text}", "passwordwrochophag": "${subscribeFormData.passwordwrochophag}"'
+                      String json =
+                          '{"usernamedolifrives": "${_usernameController.text}", "passwordwrochophag": "${subscribeFormData.passwordwrochophag}"'
                           ', "personnamedolifrives": "${subscribeFormData.personnamedolifrives}"'
                           ', "personsurnamedolifrives": "${subscribeFormData.personsurnamedolifrives}"}';
                       Response response = await post(WS_url_Subscribe, headers: headers, body: json);
@@ -182,12 +183,10 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
 print('fp');
 print(body);
                       if (response.statusCode == 200) {
-                        _showDialog('Registrazione avvenuta con successo, prova ad accedere.');
-                        Navigator.of(context).pop();
+                        _showDialogSubscribe('Registrazione avvenuta con successo, prova ad accedere.');
                       } else {
                         print('subscribefailed');
-                        _showDialog('Subscribe errato, riprova.');
-                        Navigator.of(context).pop();
+                        _showDialogSubscribe('Subscribe errato, riprova.');
                         //#change throw Exception('Subscribe failed.');
                       }
                     },
@@ -210,7 +209,7 @@ print(body);
   }
 
 
-  void _showDialog(String message) {
+  void _showDialogSubscribe(String message) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -218,7 +217,7 @@ print(body);
         actions: [
           TextButton(
             child: const Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () =>  Navigator.pushNamedAndRemoveUntil(context,'/',(_) => false),
           ),
         ],
       ),
