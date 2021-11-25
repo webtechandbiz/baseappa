@@ -123,11 +123,49 @@ class _LoginHttpState extends State<LoginHttp> {
     }
   }
 
+  //#TODO generare authtoken e poi loggarsi con quello nuovo, salvandolo così da poterlo riutilizzare dopo
+  Future<void> _loginWithGeneratedAuthToken(WS_url_accessosenzaregistrazione_login) async {
+    Map<String, String> headers = {
+      "Content-type": "application/json; charset=UTF-8"
+    };
+    String json = ''; //'{"authtokenloginaowjewlr": "${_authtokenlogin}"}';
+
+    print('******');
+    print(json);
+    Response response = await post(WS_url_accessosenzaregistrazione_login, headers: headers, body: json);
+    int statusCode = response.statusCode;
+    String body = response.body;
+
+    if (response.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
+      //#changeif-3412 prefs.setString('_username',loginFormData.usernamedolifrives?.toString() ?? '');
+      //#changeif-3412 prefs.setString('_password',loginFormData.passwordwrochophag?.toString() ?? '');
+      late Future<Homedata> futureHomedata;
+      futureHomedata = fetchHomedata(response);
+
+      Navigator.pushNamed(
+        context,
+        '/home',
+        arguments: ScreenArgumentsFutureLoginFormDataParameters(
+            futureHomedata
+        ),
+      );
+
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("authenticationtoken", ""); //# se non funziona, svuota l'authenticationtoken memorizzato
+      _showAuthlokenLoginFailedDialog('Login automatico (generated authtoken) non ha funzionato, inserisci le credenziali e riprova ad accedere.');
+      String _authtokenlogin_saved = prefs.getString('authenticationtoken') ?? '';
+      //throw Exception('Login authtoken failed.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final argsLogin = ModalRoute.of(context)!.settings.arguments as ScreenArgumentsLoginFormParameters;
-    final Uri WS_url_login = Uri.parse('[ws-login-url]'); //#change
-    final Uri WS_url_authtoken_login = Uri.parse('[ws-authtoken-login-url]'); //#change
+    final Uri WS_url_login = Uri.parse(''); //#change
+    final Uri WS_url_authtoken_login = Uri.parse(''); //#change
+    final Uri WS_url_accessosenzaregistrazione_login = Uri.parse(''); //#change
 
     //#changeif-3412 _username_saved = args.username;
     //#changeif-3412 _password_saved = args.password;
@@ -317,11 +355,8 @@ class _LoginHttpState extends State<LoginHttp> {
                                       minimumSize: Size(MediaQuery.of(context).size.width/2-20,40)
                                   ),
                                   onPressed: () async {
-                                    Navigator.pushNamed(
-                                        context,
-                                        '/forgottenpassword_http',
-                                        arguments: ScreenArgumentsForgottenpasswordFormParameters()
-                                    );
+
+                                    _loginWithGeneratedAuthToken(WS_url_accessosenzaregistrazione_login);
                                   },
                                 ),
                               ),
