@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:baseappahome/src/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -55,7 +56,7 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArgumentsSubscribeFormParameters;
-    final Uri WS_url_Subscribe = Uri.parse(''); //#change
+    final Uri WS_url_Subscribe = AppConfig.WS_url_Subscribe;
 
     Image _header_image =
       new Image.asset(
@@ -180,8 +181,7 @@ class _SubscribeHttpState extends State<SubscribeHttp> {
                       Response response = await post(WS_url_Subscribe, headers: headers, body: json);
                       int statusCode = response.statusCode;
                       String body = response.body;
-print('fp');
-print(body);
+
                       if (response.statusCode == 200) {
                         _showDialogSubscribe('Registrazione avvenuta con successo, prova ad accedere.');
                       } else {
