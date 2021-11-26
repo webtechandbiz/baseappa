@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:baseappahome/src/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -123,7 +124,6 @@ class _LoginHttpState extends State<LoginHttp> {
     }
   }
 
-  //#TODO generare authtoken e poi loggarsi con quello nuovo, salvandolo così da poterlo riutilizzare dopo
   Future<void> _loginWithGeneratedAuthToken(WS_url_accessosenzaregistrazione_login) async {
     Map<String, String> headers = {
       "Content-type": "application/json; charset=UTF-8"
@@ -163,9 +163,9 @@ class _LoginHttpState extends State<LoginHttp> {
   @override
   Widget build(BuildContext context) {
     final argsLogin = ModalRoute.of(context)!.settings.arguments as ScreenArgumentsLoginFormParameters;
-    final Uri WS_url_login = Uri.parse(''); //#change
-    final Uri WS_url_authtoken_login = Uri.parse(''); //#change
-    final Uri WS_url_accessosenzaregistrazione_login = Uri.parse(''); //#change
+    final Uri WS_url_login = AppConfig.WS_url_login;
+    final Uri WS_url_authtoken_login = AppConfig.WS_url_authtoken_login;
+    final Uri WS_url_accessosenzaregistrazione_login = AppConfig.WS_url_accessosenzaregistrazione_login;
 
     //#changeif-3412 _username_saved = args.username;
     //#changeif-3412 _password_saved = args.password;
@@ -183,16 +183,15 @@ class _LoginHttpState extends State<LoginHttp> {
         'assets/images/_auth/hd-login.jpg',
         fit: BoxFit.cover,
       );
-
     //TextEditingController _usernameController = TextEditingController(text: _username_saved.toString());
     TextFormField _usernameTFF = TextFormField(
       controller: _usernameController,
       //autofocus: true,
       textInputAction: TextInputAction.next,
-      decoration: const InputDecoration(
-        labelText: 'Email', //#change
+      decoration: InputDecoration(
+        labelText: AppConfig.applabels['login_http']['labelText'],
         filled: true,
-        hintText: 'Your email address', //#change
+        hintText: AppConfig.applabels['login_http']['hintText'],
         /* //#change
         border: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
@@ -409,7 +408,7 @@ class _LoginHttpState extends State<LoginHttp> {
         actions: [
           TextButton(
             child: const Text('OK, capito'),
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(context,'/',(_) => false),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context,'/',(_) => false), //# restart
           ),
         ],
       ),
