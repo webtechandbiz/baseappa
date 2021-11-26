@@ -1,5 +1,7 @@
 import 'package:baseappahome/src/auth/http/forgottenpassword_http.dart';
+import 'package:baseappahome/src/auth/http/logout_http.dart';
 import 'package:baseappahome/src/auth/http/subscribe_http.dart';
+import 'package:baseappahome/src/config/app_config.dart';
 import 'package:baseappahome/src/screens/scheda.dart';
 import 'package:baseappahome/src/screens/homegrid.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,7 @@ import 'src/auth/http/login_http.dart';
 
 void main() {runApp(const BaseApp());}
 
-final String splash_bg_page = '[cover-image-url]'; //#change
+final String splash_bg_page = AppConfig.splash_bg_page;
 
 //# questo prepara la route "signin_http"
 //# che viene usata dopo (al click del bottone)
@@ -19,6 +21,11 @@ final mynavigationroutes = [
     name: 'Sign in with HTTP',
     route: '/signin_http',
     builder: (context) => LoginHttp(), //# sta dentro login_http.dart
+  ),
+  MyNavigationRoutes(
+    name: 'Sign out with HTTP',
+    route: '/signout_http',
+    builder: (context) => LogoutHttp(), //# sta dentro logout_http.dart
   ),
   MyNavigationRoutes(
     name: 'Subscribe in with HTTP',
@@ -142,6 +149,11 @@ class ScreenArgumentsLoginFormParameters { //# questa serve per passare alla Log
 
   //#changeif-3412 ScreenArgumentsLoginFormParameters(this.username, this.password);
   ScreenArgumentsLoginFormParameters(this.authtokenlogin);
+}
+class ScreenArgumentsLogoutFormParameters {
+  final Future<String> authtokenlogin;
+
+  ScreenArgumentsLogoutFormParameters(this.authtokenlogin);
 }
 class ScreenArgumentsSubscribeFormParameters { //# questa serve per navigare verso la pagina di Registrazione
   //# in questo caso, non viene passato alcun parametro
