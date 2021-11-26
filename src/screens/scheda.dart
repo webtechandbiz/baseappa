@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:baseappahome/src/config/app_config.dart';
 
 import '../../main.dart'; /*fetch data*/
+
+//# improve with it https://api.flutter.dev/flutter/material/SliverAppBar-class.html
 
 /*fetch data */
 Future<Datascheda> fetchDatascheda(String authenticationToken, int IDitem) async {
   Map<String, String> headers = {"Content-type": "application/json; charset=UTF-8"};
   String json = '{"authenticationToken": "${authenticationToken}", "post_id": "${IDitem}"}';
-  final response = await post(Uri.parse('[ws-scheda-dettaglio]'), headers: headers, body: json);
+
+  final response = await post(AppConfig.WS_url_card, headers: headers, body: json);
 
   if (response.statusCode == 200) {
     return Datascheda.fromJson(jsonDecode(response.body));
@@ -121,7 +125,7 @@ class _SchedaState extends State<Scheda> {
     /* //#step3 */
     Color color = Theme.of(context).primaryColor;
     /* //#step3 -- */
-
+print(futureDatascheda);
     return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.blue, //#change colore (del titolo)
@@ -133,6 +137,7 @@ class _SchedaState extends State<Scheda> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 /* //#step2 */
+                print(snapshot.data);
                 Widget titleSection = Container(
                   padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                   child: Row(
