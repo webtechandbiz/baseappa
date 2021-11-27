@@ -183,7 +183,7 @@ class _LoginHttpState extends State<LoginHttp> {
         'assets/images/_auth/hd-login.jpg',
         fit: BoxFit.cover,
       );
-    //TextEditingController _usernameController = TextEditingController(text: _username_saved.toString());
+
     TextFormField _usernameTFF = TextFormField(
       controller: _usernameController,
       //autofocus: true,
