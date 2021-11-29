@@ -167,6 +167,83 @@ class DesignObjects {
 
   }
 
+  Widget verticalSection(Section section) {
+    String sectionTitle = section.sectionTitle;
+
+    ScrollController _controller = ScrollController();
+
+    return Column(
+      children: <Widget>[
+        Container(
+            child: Text(sectionTitle) //# titolo della sezione
+        ),
+        Container(
+          child: ListView.builder(
+            controller: _controller,
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: section.dataList.length, //# numero delle Card presenti
+            itemBuilder: (context, index) {
+              String itemtitle = section.dataList[index].title;
+              String imagePath = section.dataList[index].imagePath;
+              String excerpt = section.dataList[index].excerpt;
+              return  GestureDetector(
+                child: Card( //# questo è il box cliccabile
+                  elevation: 5.0, //#change grandezza dell'ombra dietro la Card
+                  child: Row( //# questa riga contiene le due colonne (una per l'immagine e una per i testi)
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(imagePath),
+                                  fit: BoxFit.cover //#change zoomma l'immagine riempiendo la riga (quindi le parti dx e sx dell'immagine non si vedrà)
+                                //#fit: BoxFit.fill //#change stretcha l'immagine
+                              ),
+                            ),
+                            height: MediaQuery.of(context).size.width / 3,
+                            width: MediaQuery.of(context).size.width / 3,
+                            alignment: Alignment.center,
+                            //#change child: new Text('Item $index' + itemtitle), text over the image
+                          ),
+                          // Text(itemtitle), //# change per inserire un testo sotto l'immagine, adattamdo l'altezza del container
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(itemtitle),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Container(
+                              width: 200, //#impostare questa larghezza altrimenti non va a capo mai
+                              child: Text(excerpt + itemtitle),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  print(index);
+                  Navigator.pushNamed(
+                      context,
+                      '/scheda',
+                      arguments: ScreenArgumentsSchedaParameters('asdasdasd', index) //#todo
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ]
+    );
+
+  }
+
   Widget get_drawer(context, _authtokenlogin_saved){
     return Drawer(
       child: ListView(
@@ -201,6 +278,7 @@ class DesignObjects {
       ),
     );
   }
+
 }
 
 class Section {
