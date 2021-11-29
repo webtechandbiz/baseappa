@@ -97,7 +97,87 @@ class _HomeRouteState extends State<HomeRoute> {
               designobjects.horizontalScrollSection(sections.section1),
               Text('asdasdasdasd'),
               designobjects.verticalScrollSection(sections.section2),
-              designobjects.verticalSection(sections.section2)
+              designobjects.verticalSection(sections.section2),
+              Column(
+                children: [
+                  TextButton(
+                    child: const Text(
+                      'Button1',
+                      style: TextStyle(
+                        //#change fontWeight: FontWeight.bold,
+                        color: Colors.white, //#change colore (del bottone per accedere)
+                      ),
+                    ), //#change bottone per accedere
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        minimumSize: Size(MediaQuery.of(context).size.width/2,40)
+                    ),
+                    onPressed: () async {
+
+                    },
+                  ),
+                ],
+              ), //# 1 column, 1 button
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      TextButton(
+                        child: const Text(
+                          'Button1',
+                          style: TextStyle(
+                            //#change fontWeight: FontWeight.bold,
+                            color: Colors.white, //#change colore (del bottone per accedere)
+                          ),
+                        ), //#change bottone per accedere
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            minimumSize: Size(MediaQuery.of(context).size.width/2,40)
+                        ),
+                        onPressed: () async {
+
+                        },
+                      ),
+                      TextButton(
+                        child: const Text(
+                          'Button2',
+                          style: TextStyle(
+                            //#change fontWeight: FontWeight.bold,
+                            color: Colors.white, //#change colore (del bottone per accedere)
+                          ),
+                        ), //#change bottone per accedere
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            minimumSize: Size(MediaQuery.of(context).size.width/2,40)
+                        ),
+                        onPressed: () async {
+
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ), //# 2 columns, 2 buttons
+              Column(
+                children: [
+                  TextButton(
+                    child: const Text(
+                      'Button3',
+                      style: TextStyle(
+                        //#change fontWeight: FontWeight.bold,
+                        color: Colors.white, //#change colore (del bottone per accedere)
+                      ),
+                    ), //#change bottone per accedere
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        minimumSize: Size(MediaQuery.of(context).size.width,40)
+                    ),
+                    onPressed: () async {
+
+                    },
+                  ),
+                ],
+              ), //# 1 column, 1 button
             ];
 
             return Scaffold(
