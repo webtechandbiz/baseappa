@@ -220,17 +220,7 @@ class _HomeRouteState extends State<HomeRoute> {
     );
 
     //#change: bottom navigator menu
-    List<Widget> _widgetOptions = <Widget>[
-      _fb,
-      Text(
-        'Index 1: Test',
-        style: optionStyle,
-      ),
-      Text(
-        'Index 2: Test',
-        style: optionStyle,
-      ),
-    ];
+    List<Widget> _widgetOptions = designobjects.get_widget_options(_fb, optionStyle);
 
     return Scaffold(
       drawer: designobjects.get_drawer(context, _authtokenlogin_saved), //# change per il menu
@@ -246,25 +236,7 @@ class _HomeRouteState extends State<HomeRoute> {
       ),
 
       //# https://api.flutter.dev/flutter/material/BottomNavigationBar-class.html
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Logout',
-          ),
-        ],
-        currentIndex: _BottomBarSelectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onBottomBarItemTapped,
-      ),
+      bottomNavigationBar: designobjects.get_bottombar(_BottomBarSelectedIndex, _onBottomBarItemTapped),
     );
   }
 
