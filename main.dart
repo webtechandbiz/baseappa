@@ -106,9 +106,16 @@ class _CoverPageState extends State<CoverPage> {
       //#splash pag appbar
       /*appBar: AppBar(title: Text(widget.title),),#change */
       body: Container(
-        decoration: BoxDecoration(
+        /*decoration: BoxDecoration( //#change: use it is if internet is needed by init
             image: DecorationImage(
                 image: NetworkImage(splash_bg_page), fit: BoxFit.cover
+            )
+        ),*/
+        decoration: const BoxDecoration( //#change: use it is if internet is not needed by init
+            image: DecorationImage(
+                image: AssetImage(
+                    'assets/images/_auth/hd-forgottenpassword.jpg'
+                ), fit: BoxFit.cover
             )
         ),
 
