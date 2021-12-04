@@ -279,6 +279,41 @@ class DesignObjects {
     );
   }
 
+  Widget get_bottombar(_BottomBarSelectedIndex, _onBottomBarItemTapped){
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.business),
+          label: 'Business',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.school),
+          label: 'Logout',
+        ),
+      ],
+      currentIndex: _BottomBarSelectedIndex,
+      selectedItemColor: Colors.amber[800],
+      onTap: _onBottomBarItemTapped,
+    );
+  }
+
+  List<Widget> get_widget_options(_fb, optionStyle){
+    return <Widget>[
+      _fb,
+      Text(
+        'Index 1: Test',
+        style: optionStyle,
+      ),
+      Text(
+        'Index 2: Test',
+        style: optionStyle,
+      ),
+    ];
+  }
 }
 
 class Section {
