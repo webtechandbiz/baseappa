@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:baseappahome/src/config/app_cacher.dart';
 import 'package:baseappahome/src/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -40,6 +42,8 @@ class LoginHttp extends StatefulWidget {
 }
 
 class _LoginHttpState extends State<LoginHttp> {
+  ManageStorage _cs = ManageStorage();
+
   LoginFormData firstLoginFormData = LoginFormData();
   LoginFormData loginFormData = LoginFormData();
 
@@ -66,6 +70,10 @@ class _LoginHttpState extends State<LoginHttp> {
       //#changeif-3412 prefs.setString('_password',loginFormData.passwordwrochophag?.toString() ?? '');
 
       late Future<Homedata> futureHomedata;
+
+      print('WRITEDATA-UP');
+      _cs.writeCache(response.body.toString());
+
       futureHomedata = fetchHomedata(response);
 
       Navigator.pushNamed(
@@ -81,6 +89,13 @@ class _LoginHttpState extends State<LoginHttp> {
       _showDialog('Login errato, riprova.');
       //#change throw Exception('Login failed.');
     }
+  }
+
+  Future<Homedata> fetchCachedHomedata(responsebody) async {
+    //print('fetchCachedHomedata*************************************************************************');
+    final jsonData = jsonDecode(responsebody);
+    //print('2fetchCachedHomedata*************************************************************************');
+    return Homedata.fromJson(jsonData);
   }
 
   Future<void> _loginWithAuthToken(WS_url_authtoken_login, _authtokenlogin) async {
@@ -100,7 +115,13 @@ class _LoginHttpState extends State<LoginHttp> {
       //#changeif-3412 prefs.setString('_username',loginFormData.usernamedolifrives?.toString() ?? '');
       //#changeif-3412 prefs.setString('_password',loginFormData.passwordwrochophag?.toString() ?? '');
       late Future<Homedata> futureHomedata;
-      futureHomedata = fetchHomedata(response);
+
+      print('WRITEDATA-T');
+      _cs.writeCache(response.body.toString());
+
+      //futureHomedata = fetchHomedata(response);
+      final String value = await _cs.readCache();
+      futureHomedata = fetchCachedHomedata(value);
 
       Navigator.pushNamed(
         context,
@@ -132,31 +153,39 @@ class _LoginHttpState extends State<LoginHttp> {
 
     print('******');
     print(json);
-    Response response = await post(WS_url_accessosenzaregistrazione_login, headers: headers, body: json);
-    int statusCode = response.statusCode;
-    String body = response.body;
+    try {
+      Response response = await post(WS_url_accessosenzaregistrazione_login, headers: headers, body: json);
 
-    if (response.statusCode == 200) {
-      final prefs = await SharedPreferences.getInstance();
-      //#changeif-3412 prefs.setString('_username',loginFormData.usernamedolifrives?.toString() ?? '');
-      //#changeif-3412 prefs.setString('_password',loginFormData.passwordwrochophag?.toString() ?? '');
-      late Future<Homedata> futureHomedata;
-      futureHomedata = fetchHomedata(response);
+      int statusCode = response.statusCode;
+      String body = response.body;
 
-      Navigator.pushNamed(
-        context,
-        '/home',
-        arguments: ScreenArgumentsFutureLoginFormDataParameters(
-            futureHomedata
-        ),
-      );
+      if (response.statusCode == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        //#changeif-3412 prefs.setString('_username',loginFormData.usernamedolifrives?.toString() ?? '');
+        //#changeif-3412 prefs.setString('_password',loginFormData.passwordwrochophag?.toString() ?? '');
+        late Future<Homedata> futureHomedata;
 
-    } else {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString("authenticationtoken", ""); //# se non funziona, svuota l'authenticationtoken memorizzato
-      _showAuthlokenLoginFailedDialog('Login automatico (generated authtoken) non ha funzionato, inserisci le credenziali e riprova ad accedere.');
-      String _authtokenlogin_saved = prefs.getString('authenticationtoken') ?? '';
-      //throw Exception('Login authtoken failed.');
+        print('WRITEDATA-A');
+        _cs.writeCache(response.body.toString());
+
+        futureHomedata = fetchHomedata(response);
+
+        Navigator.pushNamed(
+          context,
+          '/home',
+          arguments: ScreenArgumentsFutureLoginFormDataParameters(
+              futureHomedata
+          ),
+        );
+
+      } else {
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString("authenticationtoken", ""); //# se non funziona, svuota l'authenticationtoken memorizzato
+        _showAuthlokenLoginFailedDialog('Login automatico (generated authtoken) non ha funzionato, inserisci le credenziali e riprova ad accedere.');
+        String _authtokenlogin_saved = prefs.getString('authenticationtoken') ?? '';
+      }
+    } on SocketException {
+      _showNoInternetDialog('Nessuna connessione internet');
     }
   }
 
@@ -354,7 +383,6 @@ class _LoginHttpState extends State<LoginHttp> {
                                       minimumSize: Size(MediaQuery.of(context).size.width/2-20,40)
                                   ),
                                   onPressed: () async {
-
                                     _loginWithGeneratedAuthToken(WS_url_accessosenzaregistrazione_login);
                                   },
                                 ),
@@ -415,6 +443,38 @@ class _LoginHttpState extends State<LoginHttp> {
     );
   }
 
+  void _showNoInternetDialog(String message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(message),
+        actions: [
+          TextButton(
+            child: const Text('Go out'),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context,'/',(_) => false), //# restart
+          ),
+          TextButton(
+            child: const Text('Entra senza internet (utilizzerà le informazioni in cache)'),
+            onPressed: () async {
+              final String value = await _cs.readCache();
+              late Future<Homedata> futureHomedata;
+              futureHomedata = fetchCachedHomedata(value);
+
+              Navigator.pushNamed(
+                context,
+                '/home',
+                arguments: ScreenArgumentsFutureLoginFormDataParameters(
+                    futureHomedata
+                ),
+              );
+              //# restart
+            },
+          ),
+
+        ],
+      ),
+    );
+  }
 }
 
 
@@ -423,18 +483,21 @@ class Homedata {
   bool? success;
   String authenticationToken;
   List<dynamic>? spuntieducativi;
+  Map<String, dynamic> jsondata;
 
   Homedata({
     required this.authenticationToken,
     required this.success,
-    required this.spuntieducativi
+    required this.spuntieducativi,
+    required this.jsondata
   });
 
   factory Homedata.fromJson(Map<String, dynamic> json) {
     return Homedata(
       authenticationToken: json['authenticationToken'],
       success: json['success'],
-      spuntieducativi: json['spuntieducativi']
+      spuntieducativi: json['spuntieducativi'],
+      jsondata: json
     );
   }
 }
