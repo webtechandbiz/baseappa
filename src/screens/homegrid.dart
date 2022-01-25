@@ -17,6 +17,7 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends State<HomeRoute> {
+  //var scaffoldKey = GlobalKey<ScaffoldState>();
   ManageStorage _cs = ManageStorage();
 
   int _BottomBarSelectedIndex = 0;
@@ -107,6 +108,15 @@ class _HomeRouteState extends State<HomeRoute> {
           Sections sections = new Sections(section1: section1, section2: section2);
           //DesignObjects designobjects = new DesignObjects();
           List <Widget> homeSections = [
+            /* #change 
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                color: Colors.white,
+                icon: Icon(Icons.menu),
+                onPressed: () => scaffoldKey.currentState!.openDrawer(),
+              ),
+            ),*/
             designobjects.horizontalScrollSection(sections.section1),
             Text('asdasdasdasd'),
             designobjects.verticalScrollSection(sections.section2),
@@ -223,6 +233,7 @@ class _HomeRouteState extends State<HomeRoute> {
     List<Widget> _widgetOptions = designobjects.get_widget_options(_fb, optionStyle);
 
     return Scaffold(
+      //key: scaffoldKey, //#change
       drawer: designobjects.get_drawer(context, _authtokenlogin_saved), //# change per il menu
       appBar: AppBar(
         backgroundColor: Colors.blue, //#change colore (del titolo)
